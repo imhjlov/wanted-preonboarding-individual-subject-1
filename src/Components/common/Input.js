@@ -4,18 +4,18 @@ import MessageBox from "Components/common/MessageBox";
 
 const Input = (
   {
-    type = "text",
+    type,
     name,
     value,
-    onChange = () => {},
+    onChange,
     placeholder,
-    icon = null,
-    error = false,
-    errorMessage = null,
-    successMessage = null,
-    width = "100%",
-    numberOnly = false,
-    maxLength = null,
+    icon,
+    error,
+    errorMessage,
+    successMessage,
+    width,
+    numberOnly,
+    maxLength,
   },
   ref
 ) => {
@@ -37,6 +37,18 @@ const Input = (
       {!error && successMessage && <MessageBox textColor="#87BF44">{successMessage}</MessageBox>}
     </Wrapper>
   );
+};
+
+Input.defaltProps = {
+  type: "text",
+  onChange: () => {},
+  icon: null,
+  error: false,
+  errorMessage: null,
+  successMessage: null,
+  width: "100%",
+  numberOnly: false,
+  maxLength: null,
 };
 
 const Wrapper = styled.div`

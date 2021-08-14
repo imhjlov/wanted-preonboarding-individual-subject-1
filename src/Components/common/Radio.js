@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { MessageBox } from "Components/common";
 
-const Radio = ({ name, value, onChange, data = [], error = false, errorMessage = null }) => {
+const Radio = ({ name, value, onChange, data, error, errorMessage }) => {
   return (
     <Wrapper>
       <RadioGroup error={error}>
@@ -21,6 +21,12 @@ const Radio = ({ name, value, onChange, data = [], error = false, errorMessage =
       {error && errorMessage && <MessageBox textAlign="center">{errorMessage}</MessageBox>}
     </Wrapper>
   );
+};
+
+Radio.defaltProps = {
+  data: [],
+  error: false,
+  errorMessage: null,
 };
 
 const Wrapper = styled.div`

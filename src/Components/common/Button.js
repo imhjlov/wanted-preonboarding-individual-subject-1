@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 
 class Button extends Component {
   render() {
-    const { value, width, marginTop, onClick, type = "button" } = this.props;
+    const { value, width, marginTop, onClick, type } = this.props;
     return (
       <StyledButton type={type} width={width} marginTop={marginTop} onClick={onClick}>
         {value}
@@ -11,6 +11,10 @@ class Button extends Component {
     );
   }
 }
+
+Button.defaltProps = {
+  type: "button",
+};
 
 const StyledButton = styled.button`
   ${({ theme }) => theme.flexSet("center", "center")}
