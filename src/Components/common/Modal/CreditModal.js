@@ -1,8 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
-import Button from "Components/common/Button";
-import Input from "Components/common/Input";
-import MessageBox from "Components/common/MessageBox";
+import { Button, Input, MessageBox } from "Components/common";
 
 const CreditModal = ({ creditCard, handleSetCardNum, toggleModal }) => {
   const inputRef = useRef([]);

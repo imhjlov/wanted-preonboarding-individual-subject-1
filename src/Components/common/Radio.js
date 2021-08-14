@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import MessageBox from "Components/common/MessageBox";
+import { MessageBox } from "Components/common";
 
 const Radio = ({ name, value, onChange, data = [], error = false, errorMessage = null }) => {
   return (

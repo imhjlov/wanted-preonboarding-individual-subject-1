@@ -1,17 +1,17 @@
-import * as Regex from "Utils/Regex.js";
-import { AUTH_LEVEL } from "Utils/Constants";
+import * as regex from "Utils/regex.js";
+import { AUTH_LEVEL } from "Utils/constants";
 
 export const Validator = (formData, setErrors) => {
   const ValidationUsingRegex = {
     authority: (authority) => !(authority === AUTH_LEVEL.unknown),
-    email: (email) => Regex.isEmail(email),
-    pw: (pw) => Regex.isPassword(pw),
+    email: (email) => regex.isEmail(email),
+    pw: (pw) => regex.isPassword(pw),
     pwCheck: (pwCheck) => pwCheck === formData.pw,
-    name: (name) => Regex.isName(name),
+    name: (name) => regex.isName(name),
     address: (address) => !(address === ""),
     detailAddress: (detailAddress) => !(detailAddress === ""),
-    dateOfBirth: (dateOfBirth) => Regex.isDateOfBirth(dateOfBirth),
-    creditCardNum: (creditCardNum) => Regex.isCreditNum(creditCardNum),
+    dateOfBirth: (dateOfBirth) => regex.isDateOfBirth(dateOfBirth),
+    creditCardNum: (creditCardNum) => regex.isCreditNum(creditCardNum),
   };
 
   const isValidator = (formData) => {

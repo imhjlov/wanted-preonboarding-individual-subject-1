@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { ADMIN } from "Utils/constants";
-import AuthSelector from "Components/Admin/UserDataTable/AuthSelector";
+import { AuthSelector } from "Components/Admin";
 
 const UserDataTable = ({ filteredUsers, handleAuthUpdate }) => {
   const {

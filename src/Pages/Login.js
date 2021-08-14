@@ -1,16 +1,12 @@
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
-import Input from "Components/common/Input";
-import Button from "Components/common/Button";
-import MessageBox from "Components/common/MessageBox";
 import { USER_STORAGE, LOGGEDIN_USER } from "Utils/constants";
 import { loadLocalStorage, saveLocalStorage } from "Utils/Storage";
 import { compareSync } from "Utils/bcrypt";
-import validator from "Utils/Validator.js";
-import { ReactComponent as Mail } from "Assets/svg/mail.svg";
-import { ReactComponent as ClosedEye } from "Assets/svg/eye_closed.svg";
-import { ReactComponent as OpenedEye } from "Assets/svg/eye_opened.svg";
+import { Validator } from "Utils/validator";
+import { Input, Button, MessageBox } from "Components/common";
+import { Mail, ClosedEye, OpenedEye } from "Assets/svg";
 
 const Login = () => {
   const history = useHistory();
@@ -36,7 +32,7 @@ const Login = () => {
   const handleLoginSubmit = (e) => {
     e.preventDefault();
 
-    if (validator(formData, setErrors)) {
+    if (Validator(formData, setErrors)) {
       const userData = loadLocalStorage(USER_STORAGE);
       if (!userData) return setUnknownUser(true);
       const existedUser = userData.find(
