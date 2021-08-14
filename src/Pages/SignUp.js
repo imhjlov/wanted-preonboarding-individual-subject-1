@@ -3,11 +3,13 @@ import styled, { css } from "styled-components";
 import * as regex from "Utils/regex";
 import { Validator } from "Utils/validator";
 import { hashSync } from "Utils/bcrypt";
-import { AUTH_LEVEL, USER_STORAGE } from "Utils/constants";
+import { AUTH_LEVEL, USER_STORAGE, SIGNUP_EMAIL_STATUS } from "Utils/constants";
 import { loadLocalStorage, saveLocalStorage, autoIncrementUserId } from "Utils/Storage";
 import { Button, Input, Radio } from "Components/common";
 import { Modal, AddressModal, CreditModal, SignupModal } from "Components/common/Modal";
 import { Calendar, Card, ClosedEye, OpenedEye, Mail, Map, Person, checkIcon } from "Assets/svg";
+import DuplicateCheck from "Components/SignUp/EmailDuplicateCheck/DuplicateCheck";
+import EmailStatusMessage from "Components/SignUp/EmailDuplicateCheck/EmailStatusMessage";
 
 const SignUp = () => {
   const [modalType, setModalType] = useState("");
@@ -47,38 +49,14 @@ const SignUp = () => {
   };
   const [errors, setErrors] = useState(initialState);
 
-  const handleClickDuplicateCheck = () => {
-    setEmailDuplicateChecked(true);
-
-    if (!regex.isEmail(formData.email)) {
-      setErrors({ ...errors, email: true });
-      setEmailDuplicateStatus(SIGNUP_EMAIL_STATUS.invalidType);
-      return;
-    }
-
-    const userData = loadLocalStorage(USER_STORAGE);
-    if (!userData) {
-      setErrors({ ...errors, email: false });
-      setEmailDuplicateStatus(SIGNUP_EMAIL_STATUS.confirmedSuccess);
-      return;
-    }
-
-    const searchEmail = userData.filter((user) => user.email === formData.email);
-    if (searchEmail.length) {
-      setErrors({ ...errors, email: true });
-      setEmailDuplicateStatus(SIGNUP_EMAIL_STATUS.confirmedFailure);
-    } else {
-      setErrors({ ...errors, email: false });
-      setEmailDuplicateStatus(SIGNUP_EMAIL_STATUS.confirmedSuccess);
-    }
-  };
-
-  const getEmailStatusMessage = (status) => {
-    let message = errors.email ? "이메일을 입력하세요" : "";
-    if (status === SIGNUP_EMAIL_STATUS.invalidType) message = "이메일 형식을 확인해주세요";
-    else if (status === SIGNUP_EMAIL_STATUS.unConfirmed) message = "중복 검사를 진행해주세요";
-    else if (status === SIGNUP_EMAIL_STATUS.confirmedFailure) message = "중복된 이메일 입니다.";
-    return message;
+  const handleDuplicateCheck = () => {
+    DuplicateCheck({
+      setEmailDuplicateChecked,
+      errors,
+      setErrors,
+      formData,
+      setEmailDuplicateStatus,
+    });
   };
 
   const toggleModal = (modal) => {
@@ -188,11 +166,11 @@ const SignUp = () => {
             placeholder="이메일을 입력하세요"
             icon={<Mail />}
             error={errors.email}
-            errorMessage={getEmailStatusMessage(emailDuplicateStatus)}
+            errorMessage={EmailStatusMessage({ errors, emailDuplicateStatus })}
             successMessage={emailDuplicateChecked && "사용 가능한 이메일 입니다"}
             width="75%"
           />
-          <Button value="중복확인" width="20%" onClick={handleClickDuplicateCheck} />
+          <Button value="중복확인" width="20%" onClick={handleDuplicateCheck} />
         </EmailWrapper>
 
         <Input
@@ -440,13 +418,5 @@ const CreditCardWrapper = styled.div`
     z-index: 1;
   }
 `;
-
-const SIGNUP_EMAIL_STATUS = {
-  default: 0,
-  invalidType: 1,
-  unConfirmed: 2,
-  confirmedFailure: 3,
-  confirmedSuccess: 4,
-};
 
 export default SignUp;

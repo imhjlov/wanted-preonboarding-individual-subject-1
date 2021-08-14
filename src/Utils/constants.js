@@ -77,3 +77,11 @@ export const ADMIN = {
   PAGE_SIZE: 10,
   authTitle: { choice: "선택", admin: "관리자", teacher: "선생님", parents: "부모님" },
 };
+
+export const SIGNUP_EMAIL_STATUS = {
+  default: 0,
+  invalidType: 1,
+  unConfirmed: 2,
+  confirmedFailure: 3,
+  confirmedSuccess: 4,
+};
