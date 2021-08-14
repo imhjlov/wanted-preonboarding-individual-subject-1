@@ -7,16 +7,8 @@ import Modal from "Components/common/Modal/Modal";
 import AddressModal from "Components/common/Modal/AddressModal";
 import SignupModal from "Components/common/Modal/SignupModal";
 import CreditModal from "Components/common/Modal/CreditModal";
-import {
-  isEmail,
-  isPassword,
-  isName,
-  isDateOfBirth,
-  isCreditNum,
-  isEng,
-  isPwNum,
-  isSpe,
-} from "Utils/validator.js";
+import * as regex from "Utils/regex";
+import validator from "Utils/Validator";
 import { hashSync } from "Utils/bcrypt";
 import { AUTH_LEVEL, USER_STORAGE } from "Utils/constants";
 import { loadLocalStorage, saveLocalStorage, autoIncrementUserId } from "Utils/Storage";
@@ -38,9 +30,9 @@ const SignUp = () => {
   const [passwordCheckError, setPasswordCheckError] = useState(false);
   const [passwordError, setPasswordError] = useState({
     pwNum: false,
-    eng: false,
-    spe: false,
-    digit: false,
+    pwEng: false,
+    pwSpe: false,
+    pwDigit: false,
   });
   const [formData, setFormData] = useState({
     authority: AUTH_LEVEL.unknown,
@@ -67,43 +59,10 @@ const SignUp = () => {
   };
   const [errors, setErrors] = useState(initialState);
 
-  const validator = {
-    authority: (authority) => !(authority === AUTH_LEVEL.unknown),
-    email: (email) => isEmail(email),
-    pw: (pw) => isPassword(pw),
-    pwCheck: (pwCheck) => pwCheck === formData.pw,
-    name: (name) => isName(name),
-    address: (address) => !(address === ""),
-    detailAddress: (detailAddress) => !(detailAddress === ""),
-    dateOfBirth: (dateOfBirth) => isDateOfBirth(dateOfBirth),
-    creditCardNum: (creditCardNum) => isCreditNum(creditCardNum),
-  };
-
-  const isAllValid = (data) => {
-    for (const name in data) {
-      const value = data[name];
-      const validateFunction = validator[name];
-
-      if (!validateFunction(value)) {
-        setErrors((prev) => ({
-          ...prev,
-          [name]: true,
-        }));
-        return false;
-      } else {
-        setErrors((prev) => ({
-          ...prev,
-          [name]: false,
-        }));
-      }
-    }
-    return true;
-  };
-
   const handleClickDuplicateCheck = () => {
     setEmailDuplicateChecked(true);
 
-    if (!isEmail(formData.email)) {
+    if (!regex.isEmail(formData.email)) {
       setErrors({ ...errors, email: true });
       setEmailDuplicateStatus(SIGNUP_EMAIL_STATUS.invalidType);
       return;
@@ -174,10 +133,10 @@ const SignUp = () => {
     if (name === "pw") {
       setPasswordError({
         ...passwordError,
-        eng: isEng(value) >= 0,
-        pwNum: isPwNum(value) >= 0,
-        spe: isSpe(value) >= 0,
-        digit: value.length >= 8,
+        pwEng: regex.isPwEng(value) >= 0,
+        pwNum: regex.isPwNum(value) >= 0,
+        pwSpe: regex.isPwSpe(value) >= 0,
+        pwDigit: value.length >= 8,
       });
     }
 
@@ -203,8 +162,7 @@ const SignUp = () => {
       return;
     }
 
-    const allValid = isAllValid(formData);
-    if (allValid) {
+    if (validator(formData, setErrors)) {
       formData.id = autoIncrementUserId();
       formData.pw = hashSync(formData.pw, 8);
       delete formData.pwCheck;
@@ -268,7 +226,7 @@ const SignUp = () => {
 
         <PasswordPolicy passwordError={passwordError}>
           <div>
-            <span className="password-pwNum">숫자</span>
+            <span className="password-num">숫자</span>
           </div>
           <div>
             <span className="password-spe">특수문자</span>
@@ -422,7 +380,7 @@ const PasswordPolicy = styled.div`
       width: 20px;
       height: 16px;
     }
-    .password-pwNum {
+    .password-num {
       ${(props) =>
         props.passwordError.pwNum &&
         css`
@@ -432,7 +390,7 @@ const PasswordPolicy = styled.div`
     }
     .password-eng {
       ${(props) =>
-        props.passwordError.eng &&
+        props.passwordError.pwEng &&
         css`
           color: ${({ theme }) => theme.color.green};
           font-weight: 600;
@@ -440,7 +398,7 @@ const PasswordPolicy = styled.div`
     }
     .password-spe {
       ${(props) =>
-        props.passwordError.spe &&
+        props.passwordError.pwSpe &&
         css`
           color: ${({ theme }) => theme.color.green};
           font-weight: 600;
@@ -448,7 +406,7 @@ const PasswordPolicy = styled.div`
     }
     .password-digit {
       ${(props) =>
-        props.passwordError.digit &&
+        props.passwordError.pwDigit &&
         css`
           color: ${({ theme }) => theme.color.green};
           font-weight: 600;
