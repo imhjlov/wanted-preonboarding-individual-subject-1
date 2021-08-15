@@ -85,3 +85,15 @@ export const SIGNUP_EMAIL_STATUS = {
   confirmedFailure: 3,
   confirmedSuccess: 4,
 };
+
+export const ERRORS_INIT_STATE = {
+  authority: false,
+  email: false,
+  pw: false,
+  pwCheck: false,
+  name: false,
+  address: false,
+  detailAddress: false,
+  creditCardNum: false,
+  dateOfBirth: false,
+};

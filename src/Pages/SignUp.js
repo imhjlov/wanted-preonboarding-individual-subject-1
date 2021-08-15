@@ -3,13 +3,14 @@ import styled, { css } from "styled-components";
 import * as regex from "Utils/regex";
 import { Validator } from "Utils/validator";
 import { hashSync } from "Utils/bcrypt";
-import { AUTH_LEVEL, USER_STORAGE, SIGNUP_EMAIL_STATUS } from "Utils/constants";
+import { AUTH_LEVEL, USER_STORAGE, SIGNUP_EMAIL_STATUS, ERRORS_INIT_STATE } from "Utils/constants";
 import { loadLocalStorage, saveLocalStorage, autoIncrementUserId } from "Utils/Storage";
 import { Button, Input, Radio } from "Components/common";
 import { Modal, AddressModal, CreditModal, SignupModal } from "Components/common/Modal";
-import { Calendar, Card, ClosedEye, OpenedEye, Mail, Map, Person, checkIcon } from "Assets/svg";
 import DuplicateCheck from "Components/SignUp/EmailDuplicateCheck/DuplicateCheck";
 import EmailStatusMessage from "Components/SignUp/EmailDuplicateCheck/EmailStatusMessage";
+import PasswordPolicy from "Components/SignUp/PasswordPolicy";
+import { Calendar, Card, ClosedEye, OpenedEye, Mail, Map, Person } from "Assets/svg";
 
 const SignUp = () => {
   const [modalType, setModalType] = useState("");
@@ -36,18 +37,7 @@ const SignUp = () => {
     dateOfBirth: "",
   });
 
-  const initialState = {
-    authority: false,
-    email: false,
-    pw: false,
-    pwCheck: false,
-    name: false,
-    address: false,
-    detailAddress: false,
-    creditCardNum: false,
-    dateOfBirth: false,
-  };
-  const [errors, setErrors] = useState(initialState);
+  const [errors, setErrors] = useState(ERRORS_INIT_STATE);
 
   const handleDuplicateCheck = () => {
     DuplicateCheck({
@@ -65,7 +55,7 @@ const SignUp = () => {
   };
 
   const handleSetAuthority = (authority) => {
-    setErrors(initialState);
+    setErrors(ERRORS_INIT_STATE);
     setFormData({
       ...formData,
       authority,
@@ -73,7 +63,7 @@ const SignUp = () => {
   };
 
   const handleSetAddressValue = (address) => {
-    setErrors(initialState);
+    setErrors(ERRORS_INIT_STATE);
     setFormData({
       ...formData,
       address,
@@ -81,7 +71,7 @@ const SignUp = () => {
   };
 
   const handleSetCardNum = (creditCardNum) => {
-    setErrors(initialState);
+    setErrors(ERRORS_INIT_STATE);
     setFormData({
       ...formData,
       creditCardNum,
@@ -90,7 +80,7 @@ const SignUp = () => {
 
   const handleSignUpChange = (e) => {
     const { name, value } = e.target;
-    setErrors(initialState);
+    setErrors(ERRORS_INIT_STATE);
 
     if (name === "email") {
       setEmailDuplicateChecked(false);
@@ -378,9 +368,6 @@ const PasswordPolicy = styled.div`
           font-weight: 600;
         `};
     }
-  }
-`;
-
 const AddressWrapper = styled.div`
   position: relative;
 
