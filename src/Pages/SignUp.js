@@ -54,7 +54,7 @@ const SignUp = () => {
     setModalType(modal);
   };
 
-  const handleSetAuthority = (authority) => {
+  const handleAuthorityChange = (authority) => {
     setErrors(ERRORS_INIT_STATE);
     setFormData({
       ...formData,
@@ -70,7 +70,7 @@ const SignUp = () => {
     });
   };
 
-  const handleSetCardNum = (creditCardNum) => {
+  const SetCardNumFromModal = (creditCardNum) => {
     setErrors(ERRORS_INIT_STATE);
     setFormData({
       ...formData,
@@ -139,7 +139,7 @@ const SignUp = () => {
         <Radio
           name="authority"
           value={formData.authority}
-          onChange={handleSetAuthority}
+          onChange={handleAuthorityChange}
           data={[
             { value: AUTH_LEVEL.teacher, label: "선생님" },
             { value: AUTH_LEVEL.parent, label: "부모님" },
@@ -268,7 +268,7 @@ const SignUp = () => {
             {modalType === "credit" && (
               <CreditModal
                 creditCard={formData.creditCardNum}
-                handleSetCardNum={handleSetCardNum}
+                handleSetCardNum={SetCardNumFromModal}
                 toggleModal={toggleModal}
               />
             )}
